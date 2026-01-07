@@ -128,8 +128,7 @@ const Dashboard = ({ session, onLogout }) => {
             if (text) formData.append('message', text);
             if (file) formData.append('file', file);
 
-            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
-            const response = await fetch(`${BACKEND_URL}/chat`, {
+            const response = await fetch('/chat', {
                 method: 'POST',
                 headers: {
                     // 'Content-Type': 'multipart/form-data', // Browser sets this automatically with boundary
