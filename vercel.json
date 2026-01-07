@@ -1,4 +1,14 @@
 {
+    "builds": [
+        {
+            "src": "backend/main.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build"
+        }
+    ],
     "rewrites": [
         {
             "source": "/chat",
