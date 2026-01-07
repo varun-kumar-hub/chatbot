@@ -1,0 +1,67 @@
+:root {
+  /* Colors - Premium Dark/Modern Palette */
+  --bg-app: #0f1115; /* Deep dark background */
+  --bg-sidebar: #181a20; /* Slightly lighter sidebar */
+  --bg-chat: #0f1115;
+  --bg-input: #23262d; 
+  --bg-bubble-user: #2d6df6; /* Vivid blue */
+  --bg-bubble-ai: #23262d; /* Neutral dark gray */
+  --bg-hover: #2a2d35;
+  
+  --text-primary: #ededed;
+  --text-secondary: #a1a1aa;
+  --text-scintilla: #ffffff;
+
+  --border-color: #32353e;
+  
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+input, textarea {
+  font-family: inherit;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
