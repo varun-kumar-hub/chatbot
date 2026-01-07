@@ -8,6 +8,22 @@ const Dashboard = ({ session, onLogout }) => {
     const [activeChatId, setActiveChatId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [loadingMessages, setLoadingMessages] = useState(false);
+    const [showSidebar, setShowSidebar] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    // 0. Handle Resize
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth < 768;
+            setIsMobile(mobile);
+            if (!mobile) setShowSidebar(true); // Always show on desktop
+            else setShowSidebar(false); // Default hide on mobile
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Init
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // 1. Fetch Chats on Mount
     useEffect(() => {
@@ -53,6 +69,7 @@ const Dashboard = ({ session, onLogout }) => {
 
     const handleSelectChat = (id) => {
         setActiveChatId(id);
+        if (isMobile) setShowSidebar(false);
     };
 
     const handleNewChat = async () => {
@@ -153,7 +170,7 @@ const Dashboard = ({ session, onLogout }) => {
     const activeChat = chats.find(c => c.id === activeChatId);
 
     return (
-        <div style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
             <Sidebar
                 chats={chats}
                 activeChatId={activeChatId}
@@ -162,12 +179,19 @@ const Dashboard = ({ session, onLogout }) => {
                 onDeleteChat={handleDeleteChat}
                 onLogout={onLogout}
                 userEmail={session.user.email}
+
+                isOpen={showSidebar}
+                isMobile={isMobile}
+                onClose={() => setShowSidebar(false)}
             />
             <ChatWindow
                 chat={activeChat}
                 messages={messages}
                 onSendMessage={handleSendMessage}
                 isLoading={loadingMessages}
+
+                isMobile={isMobile}
+                onToggleSidebar={() => setShowSidebar(!showSidebar)}
             />
         </div>
     );

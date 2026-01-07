@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Hash, Paperclip, X } from 'lucide-react';
+import { Send, Hash, Paperclip, X, Menu } from 'lucide-react';
 import MessageBubble from './MessageBubble';
 import styles from '../styles/ChatWindow.module.css';
 
-const ChatWindow = ({ chat, messages, onSendMessage, isLoading }) => {
+const ChatWindow = ({ chat, messages, onSendMessage, isLoading, isMobile, onToggleSidebar }) => {
     const [input, setInput] = useState('');
     const [file, setFile] = useState(null);
     const messagesEndRef = useRef(null);
@@ -40,13 +40,19 @@ const ChatWindow = ({ chat, messages, onSendMessage, isLoading }) => {
 
     if (!chat) {
         return (
-            <div className={styles.emptyState}>
-                <div className={styles.emptyIcon}>✨</div>
-                <h2>Context-Aware AI Chatbot</h2>
-                <p>Select a chat or create a new one to start.</p>
-                <p style={{ fontSize: '0.8rem', marginTop: '10px', color: '#666' }}>
-                    (Ensure you have run the schema.sql in Supabase!)
-                </p>
+            <div className={styles.chatWindow}>
+                <header className={styles.header}>
+                    {isMobile && (
+                        <button className={styles.menuBtn} onClick={onToggleSidebar}>
+                            <Menu size={20} />
+                        </button>
+                    )}
+                    <h2 className={styles.title}>Context-Aware AI Chatbot</h2>
+                </header>
+                <div className={styles.emptyState}>
+                    <div className={styles.emptyIcon}>✨</div>
+                    <p>Select a chat or create a new one to start.</p>
+                </div>
             </div>
         );
     }
@@ -54,7 +60,12 @@ const ChatWindow = ({ chat, messages, onSendMessage, isLoading }) => {
     return (
         <div className={styles.chatWindow}>
             <header className={styles.header}>
-                <Hash size={18} className={styles.headerIcon} />
+                {isMobile && (
+                    <button className={styles.menuBtn} onClick={onToggleSidebar}>
+                        <Menu size={20} />
+                    </button>
+                )}
+                {!isMobile && <Hash size={18} className={styles.headerIcon} />}
                 <h2 className={styles.title}>{chat.title || 'New Chat'}</h2>
             </header>
 
@@ -63,7 +74,7 @@ const ChatWindow = ({ chat, messages, onSendMessage, isLoading }) => {
                     <MessageBubble key={msg.id} sender={msg.sender} content={msg.content} fileUrl={msg.file_url} />
                 ))}
                 {isLoading && (
-                    <div className={`${styles.typingIndicator} ${styles.aiTyper}`}>
+                    <div className={`${styles.typingIndicator} ${styles.aiTyper} `}>
                         <span>●</span><span>●</span><span>●</span>
                     </div>
                 )}

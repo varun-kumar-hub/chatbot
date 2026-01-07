@@ -7,6 +7,24 @@
     position: relative;
 }
 
+.menuBtn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.menuBtn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
 .header {
     height: 60px;
     border-bottom: 1px solid var(--border-color);

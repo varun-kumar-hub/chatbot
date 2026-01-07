@@ -166,3 +166,49 @@
     background-color: var(--bg-hover);
     color: #ff6b6b;
 }
+
+/* Mobile Drawer Styles */
+.mobileSidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.mobileSidebar.open {
+    transform: translateX(0);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+}
+
+.headerTop {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 4px;
+    cursor: pointer;
+}
+
+.closeBtn:hover {
+    color: #fff;
+}
