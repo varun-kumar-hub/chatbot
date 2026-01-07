@@ -91,33 +91,39 @@ const Dashboard = ({ session, onLogout }) => {
         }
     };
 
-    const handleSendMessage = async (text) => {
+    const handleSendMessage = async (text, file) => {
         if (!activeChatId) return;
+        if (!text && !file) return;
 
-        // Optimistic UI Update (Add User Message immediately)
+        // Optimistic UI Update
         const tempMsg = {
             id: 'temp-' + Date.now(),
             sender: 'user',
-            content: text,
+            content: text || (file ? `[Uploading: ${file.name}]` : ""),
             created_at: new Date().toISOString()
         };
         setMessages(prev => [...prev, tempMsg]);
 
         try {
-            // Call Backend API
-            const response = await fetch('http://localhost:8000/chat', {
+            // Call Backend API - Use Proxy
+            const formData = new FormData();
+            formData.append('chat_id', activeChatId);
+            if (text) formData.append('message', text);
+            if (file) formData.append('file', file);
+
+            const response = await fetch('/chat', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'multipart/form-data', // Browser sets this automatically with boundary
                     'Authorization': `Bearer ${session.access_token}`
                 },
-                body: JSON.stringify({
-                    chat_id: activeChatId,
-                    message: text
-                })
+                body: formData
             });
 
-            if (!response.ok) throw new Error('Failed to get AI response');
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.detail || 'Failed to get AI response');
+            }
 
             const data = await response.json();
 
@@ -126,11 +132,10 @@ const Dashboard = ({ session, onLogout }) => {
 
             // Update Chat Title if it's the first message
             const currentChat = chats.find(c => c.id === activeChatId);
-            if (currentChat && currentChat.title === 'New Chat') {
-                // We can do this async without blocking
+            if (currentChat && currentChat.title === 'New Chat' && text) {
                 const newTitle = text.slice(0, 30) + (text.length > 30 ? '...' : '');
                 await supabase.from('chats').update({ title: newTitle }).eq('id', activeChatId);
-                fetchChats(); // Refresh list to show title
+                fetchChats();
             }
 
         } catch (error) {
@@ -139,7 +144,7 @@ const Dashboard = ({ session, onLogout }) => {
             setMessages(prev => [...prev, {
                 id: 'err-' + Date.now(),
                 sender: 'ai',
-                content: "Sorry, I'm having trouble connecting right now. Please try again.",
+                content: `Error: ${error.message || "Connection failed"}. Please try again.`,
                 created_at: new Date().toISOString()
             }]);
         }

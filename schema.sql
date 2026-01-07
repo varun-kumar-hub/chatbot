@@ -11,9 +11,13 @@ create table messages (
   id uuid default gen_random_uuid() primary key,
   chat_id uuid references chats(id) on delete cascade not null,
   sender text not null check (sender in ('user', 'ai')),
-  content text not null,
+  content text,
+  file_path text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+
+-- Note: You must create a storage bucket named 'chat-files' in your Supabase Dashboard
+-- and set it to private (not public).
 
 -- Index for faster queries
 create index chats_user_id_idx on chats(user_id);
