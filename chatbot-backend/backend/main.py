@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from typing import Optional
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'), override=True)
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '..', '.env'), override=True)
 
 # --- Configuration ---
 SUPABASE_URL = os.getenv("VITE_SUPABASE_URL")
